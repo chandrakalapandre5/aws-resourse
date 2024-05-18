@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                dir('C:\\Terraform\\terraform_1.8.2_windows_amd64\\sns\\') {
+                    bat 'terraform init'
+                }
+            }
+        }
+        stage('Plan') {
+            steps {
+                dir('C:\\Terraform\\terraform_1.8.2_windows_amd64\\sns\\') {
+                    bat 'terraform plan -out=tfplan'
+                }
+            }
+        }
+        stage('Apply') {
+            steps {
+                dir('C:\\Terraform\\terraform_1.8.2_windows_amd64\\sns\\') {
+                    bat 'terraform apply -auto-approve tfplan'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Terraform deployment completed successfully!'
+        }
+        failure {
+            echo 'Terraform deployment failed!'
+        }
+    }
+}
