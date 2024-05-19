@@ -1,0 +1,16 @@
+provider "aws" {
+  region = "ca-central-1"
+}
+
+resource "aws_instance" "terraform-instance" {
+  ami              = "ami-085c5194d6f95060c"
+  instance_type    = "t2.micro"
+  key_name         = "web"
+  availability_zone = "ca-central-1a"
+
+  tags = {
+    Name  = "sachin"
+    appid = "345"
+    env   = "dev"
+  }
+}
